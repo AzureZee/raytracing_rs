@@ -13,17 +13,17 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let img_h = int(double(img_w) / aspect_ratio);
     let img_h = if img_h < 1 { 1 } else { img_h };
-    // let img_h = 256;
+
     // camera
     // use right-handed coordinate system
     // y-axis go up, the x-axis to the right,
     // and the negative z-axis pointing in the viewing direction
     let focal_len = 1.0;
     let camera_center = Point3::new([0.0; 3]);
-    let camera_direction = Vector3::new([0.0, 0.0, focal_len]);
+    let camera_direction = Vector3::new([0.0, 0.0, -focal_len]);
 
     let viewport_h = 2.0;
-    let viewport_w = viewport_h*(double(img_w)/double(img_h));
+    let viewport_w = viewport_h * (double(img_w) / double(img_h));
 
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
     let viewport_horizonal = Vector3::new([viewport_w, 0.0, 0.0]);
@@ -50,7 +50,7 @@ fn main() {
             let pixel_center = upper_left_pixel
                 + pixel_delta_horizonal * double(i)
                 + pixel_delta_vertical * double(j);
-            
+
             let ray_direction = pixel_center - camera_center;
             let ray = Ray::new(camera_center, ray_direction);
             ray.color().write_color(&mut buf);
@@ -84,14 +84,35 @@ impl Ray {
         self.origin + self.direction * t
     }
     pub fn color(&self) -> RGB {
+        let center = Point3::new([0.0, 0.0, -1.0]);
+        let t = self.hit_shpere(center, 0.5);
+        if t > 0.0 {
+            let v = Vector3::new([1.0; 3]);
+            let n = (self.at(t) - center).unit_vector();
+            return RGB::new((n + v).arr) * 0.5;
+            // return RGB::new([1.0,0.0,0.0]);
+        }
+
         // unit_vector.y() ∈ [-1, 1], + 1 → ∈ [0, 2],* 0.5 → ∈ [0, 1]
         let unit_vector = self.direction.unit_vector();
         //interpolation factor
         let a = (unit_vector.y() + 1.0) * 0.5;
-        
+
         let white = RGB::new([1.0; 3]);
         let blue = RGB::new([0.5, 0.7, 1.0]);
         // linear blend / lerp
         white * (1.0 - a) + blue * a
+    }
+    fn hit_shpere(&self, center: Point3, radius: Double) -> Double {
+        let oc = center - self.origin;
+        let a = self.direction.len_squared();
+        let h = self.direction.dot(oc);
+        let c = oc.len_squared() - radius * radius;
+        let discriminant = h * h - a * c;
+        if discriminant < 0.0 {
+            return -1.0;
+        } else {
+            return (h - discriminant.sqrt()) / a;
+        }
     }
 }
