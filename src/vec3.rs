@@ -1,18 +1,12 @@
-use std::fmt::Write as _;
 use std::{
     marker::PhantomData,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub},
 };
 type Number = f64;
 
-// type Coordinates = [f64;3];
-// type Magnitude = f64;
 pub type Point3 = Vec3<Point>;
 pub type Vector3 = Vec3<Vector>;
-pub type RGB = Vec3<Color>;
 
-#[derive(PartialEq, Debug)]
-pub struct Color;
 #[derive(PartialEq, Debug)]
 pub struct Point;
 #[derive(PartialEq, Debug)]
@@ -52,29 +46,6 @@ impl<T: HasCoordinates> Vec3<T> {
     }
     pub fn z(&self) -> Number {
         self.arr[2]
-    }
-}
-impl RGB {
-    pub fn r(&self) -> Number {
-        self.arr[0]
-    }
-    pub fn g(&self) -> Number {
-        self.arr[1]
-    }
-    pub fn b(&self) -> Number {
-        self.arr[2]
-    }
-    pub fn write_color(&self, buf: &mut String) {
-        fn translate(old: [Number; 3]) -> [u64; 3] {
-            let n = 255.999;
-            let mut new = [0; 3];
-            for i in 0..old.len() - 1 {
-                new[i] = (n * old[i]) as u64;
-            }
-            new
-        }
-        let [r, g, b] = translate(self.arr);
-        let _ = writeln!(buf, "{} {} {}", r, g, b);
     }
 }
 
