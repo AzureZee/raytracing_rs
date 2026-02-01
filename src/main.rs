@@ -1,11 +1,9 @@
 use std::fmt::Write as _;
 use std::fs;
 use std::io::Write as _;
+use raytracing_rs::vec3::*;
+use raytracing_rs::color::*;
 
-mod color;
-mod vec3;
-use color::*;
-use vec3::*;
 fn main() {
     // image
     // w/h=16/9
@@ -26,18 +24,18 @@ fn main() {
     let viewport_w = viewport_h * (double(img_w) / double(img_h));
 
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
-    let viewport_horizonal = Vector3::new([viewport_w, 0.0, 0.0]);
+    let viewport_horizontal = Vector3::new([viewport_w, 0.0, 0.0]);
     let viewport_vertical = Vector3::new([0.0, -viewport_h, 0.0]);
 
     let viewport_center = camera_center + camera_direction;
     let viewport_upper_left =
-        viewport_center + ((-viewport_horizonal) + (-viewport_vertical)) * 0.5;
+        viewport_center + ((-viewport_horizontal) + (-viewport_vertical)) * 0.5;
 
-    let pixel_delta_horizonal = viewport_horizonal / double(img_w);
+    let pixel_delta_horizontal = viewport_horizontal / double(img_w);
     let pixel_delta_vertical = viewport_vertical / double(img_h);
 
     let upper_left_pixel =
-        viewport_upper_left + (pixel_delta_horizonal + pixel_delta_vertical) * 0.5;
+        viewport_upper_left + (pixel_delta_horizontal + pixel_delta_vertical) * 0.5;
 
     let mut buf = String::new();
     let _ = write!(buf, "P3\n{} {}\n255\n", img_w, img_h);
@@ -48,7 +46,7 @@ fn main() {
 
         for i in 0..img_w {
             let pixel_center = upper_left_pixel
-                + pixel_delta_horizonal * double(i)
+                + pixel_delta_horizontal * double(i)
                 + pixel_delta_vertical * double(j);
 
             let ray_direction = pixel_center - camera_center;
@@ -85,11 +83,11 @@ impl Ray {
     }
     pub fn color(&self) -> RGB {
         let center = Point3::new([0.0, 0.0, -1.0]);
-        let t = self.hit_shpere(center, 0.5);
+        let t = self.hit_sphere(center, 0.5);
         if t > 0.0 {
             let v = Vector3::new([1.0; 3]);
             let n = (self.at(t) - center).unit_vector();
-            return RGB::new((n + v).arr) * 0.5;
+            return RGB::new((n + v).0) * 0.5;
             // return RGB::new([1.0,0.0,0.0]);
         }
 
@@ -103,7 +101,7 @@ impl Ray {
         // linear blend / lerp
         white * (1.0 - a) + blue * a
     }
-    fn hit_shpere(&self, center: Point3, radius: Double) -> Double {
+    fn hit_sphere(&self, center: Point3, radius: Double) -> Double {
         let oc = center - self.origin;
         let a = self.direction.len_squared();
         let h = self.direction.dot(oc);
