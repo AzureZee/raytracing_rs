@@ -19,7 +19,7 @@ impl RGB {
         let _ = writeln!(buf, "{} {} {}", r, g, b);
     }
 }
-gen_getter! {RGB[r,g,b]Number}
+gen_getter! {RGB[r,g,b]=>Number}
 
 vec3_op_vec3_and_op_assign! {
     [Add,Sub,Mul,Div]

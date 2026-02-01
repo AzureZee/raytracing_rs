@@ -22,10 +22,10 @@ impl<T> Vec3<T> {
     }
 }
 gen_getter! {
-    Point3[x,y,z]f64
+    Point3[x,y,z]=>f64
 }
 gen_getter! {
-    Vector3[x,y,z]f64
+    Vector3[x,y,z]=>f64
 }
 impl Vector3 {
     pub fn dot(&self, other: Vector3) -> Double {

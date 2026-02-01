@@ -169,14 +169,14 @@ macro_rules! _deref_wrapper {
 /// struct A([N; 3]);
 ///struct B([N; 3]);
 ///
-/// gen_getter! {A[x,y,z]N}
-/// gen_getter! {B[r,g,b]N}
+/// gen_getter! {A[x,y,z]=>N}
+/// gen_getter! {B[r,g,b]=>N}
 /// ```
 macro_rules! gen_getter {
     (
         $type:ty
         [$($name:ident),+]
-        $return:ty
+        =>$return:ty
     ) => {
         $(impl $type {
             pub fn $name(&self) -> $return {
