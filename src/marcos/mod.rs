@@ -1,5 +1,14 @@
 // Vec3 Marcos
 
+// $name:ident The ident fragment matches an identifier or keyword.
+// $type:ty The ty fragment matches any kind of type expression.
+// see also https://lukaswirth.dev/tlborm/decl-macros/minutiae/fragment-specifiers.html
+// and https://doc.rust-lang.org/reference/macros-by-example.html#metavariables
+
+// [$($op:ident),+] The repeated fragment
+// see also https://doc.rust-lang.org/reference/macros-by-example.html#repetitions
+
+// #[macro_export] see https://doc.rust-lang.org/reference/macros-by-example.html#scoping-exporting-and-importing
 #[macro_export]
 /// ```
 ///vec3_op_vec3! {
@@ -94,7 +103,7 @@ macro_rules! vec3_op_vec3_and_op_assign {
             }
             impl std::ops::$trait_assign<$rhs> for $lhs {
                 fn $op_assign(&mut self, rhs: $rhs) {
-                    // $op Need the $trait
+                    // $op Need this $trait
                     use std::ops::$trait;
                     *self = self.$op(rhs);
                 }
@@ -140,29 +149,6 @@ macro_rules! vec3_op_scalar_and_op_assign {
     };
 }
 
-
-/// # Example
-/// ```
-/// struct N(u32);
-/// deref_wrapper! {N=>u32}
-/// ```
-macro_rules! _deref_wrapper {
-    (
-        $wrapper:ty=>$Inner:ty
-    ) => {
-        impl<T> std::ops::Deref for $wrapper {
-            type Target = $Inner;
-            fn deref(&self) -> &Self::Target {
-                &self.0
-            }
-        }
-        impl<T> std::ops::DerefMut for $wrapper {
-            fn deref_mut(&mut self) -> &mut Self::Target {
-                &mut self.0
-            }
-        }
-    };
-}
 #[macro_export]
 /// # Example
 /// ```
@@ -180,8 +166,32 @@ macro_rules! gen_getter {
     ) => {
         $(impl $type {
             pub fn $name(&self) -> $return {
+                // ${index()} is nightly feature
+                // https://lukaswirth.dev/tlborm/decl-macros/minutiae/metavar-expr.html#indexdepth
                 self[${index()}]
             }
         })+
+    };
+}
+/// # Example
+/// ```
+/// struct N(u32);
+/// deref_wrapper! {N=>u32}
+/// ```
+macro_rules! _deref_wrapper {
+    (
+        $Wrapper:ty=>$Inner:ty
+    ) => {
+        impl<T> std::ops::Deref for $Wrapper {
+            type Target = $Inner;
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+        impl<T> std::ops::DerefMut for $Wrapper {
+            fn deref_mut(&mut self) -> &mut Self::Target {
+                &mut self.0
+            }
+        }
     };
 }
