@@ -43,10 +43,11 @@ impl Vector3 {
         (*self * other).0.iter().sum()
     }
     pub fn cross(&self, vec_b: Vector3) -> Self {
-        let vec_a = self;
-        let c_x = vec_a.y() * vec_b.z() - vec_a.z() * vec_b.y();
-        let c_y = vec_a.z() * vec_b.x() - vec_a.x() * vec_b.z();
-        let c_z = vec_a.x() * vec_b.y() - vec_a.y() * vec_b.x();
+        let [a_x, a_y, a_z] = self.0;
+        let [b_x, b_y, b_z] = vec_b.0;
+        let c_x = a_y * b_z - a_z * b_y;
+        let c_y = a_z * b_x - a_x * b_z;
+        let c_z = a_x * b_y - a_y * b_x;
         Self::new([c_x, c_y, c_z])
     }
 
