@@ -1,4 +1,4 @@
-// Vec3 Marcos
+// Vec3 macros
 
 // $name:ident The ident fragment matches an identifier or keyword.
 // $type:ty The ty fragment matches any kind of type expression.
