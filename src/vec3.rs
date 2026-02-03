@@ -8,13 +8,19 @@ pub type Array3 = [f64; 3];
 pub type Point3 = Vec3<_Point>;
 pub type Vector3 = Vec3<_Vector>;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Default)]
 pub struct _Point;
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Default)]
 pub struct _Vector;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct Vec3<T>(pub Array3, PhantomData<T>);
+
+impl<T> From<Array3> for Vec3<T> {
+    fn from(value: Array3) -> Self {
+        Self(value, PhantomData)
+    }
+}
 
 impl<T> Vec3<T> {
     pub fn new(arr: Array3) -> Self {
@@ -72,15 +78,15 @@ vec3_op_vec3! {
 }
 // V+W,V-W,V*W,
 vec3_op_vec3! {
-    [Add,Sub,Mul]
-    [add,sub,mul]
+    [Add,Sub,Mul,Div]
+    [add,sub,mul,div]
     Vector3,Vector3=>Vector3
 }
 // V*scalar=V,
 // V/scalar=V
 vec3_op_scalar! {
-    [Mul,Div]
-    [mul,div]
+    [Add,Sub,Mul,Div]
+    [add,sub,mul,div]
     Vector3,Scalar=>Vector3
 }
 
@@ -111,7 +117,7 @@ impl Vector3 {
         // R_y=V_z * W_x − V_x * W_z
         // R_z=V_x * W_y − V_y * W_x
 
-        let v_xyz = self.clone();
+        let v_xyz = *self;
         let w_xyz = other;
         let mut v_zxy = v_xyz;
         let mut w_zxy = w_xyz;
