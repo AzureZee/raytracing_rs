@@ -189,6 +189,32 @@ macro_rules! gen_getter {
         })+
     };
 }
+#[macro_export]
+/// ```
+/// gen_builder_lite! {
+/// Vector3
+/// [
+///     with_x,
+///     with_y,
+///     with_z
+/// ]
+/// }
+/// ```
+/// https://matklad.github.io/2022/05/29/builder-lite.html
+macro_rules! gen_builder_lite {
+    (
+        $type:ty[$($name:ident),+]
+    ) => {
+        $(impl $type {
+            pub fn $name(mut self,n:Double) -> Self {
+                // ${index()} is nightly feature
+                // https://lukaswirth.dev/tlborm/decl-macros/minutiae/metavar-expr.html#indexdepth
+                self[${index()}]=n;
+                self
+            }
+        })+
+    };
+}
 /// # Example
 /// ```
 /// struct N(u32);

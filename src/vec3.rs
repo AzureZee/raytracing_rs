@@ -1,10 +1,9 @@
 // https://gabrielgambetta.com/computer-graphics-from-scratch/A0-linear-algebra.html
-use crate::{gen_getter, vec3_op_scalar, vec3_op_vec3};
+use crate::{Array3, gen_builder_lite, gen_getter, vec3_op_scalar, vec3_op_vec3};
 
 use std::marker::PhantomData;
 type Double = f64;
 pub type Scalar = f64;
-pub type Array3 = [f64; 3];
 pub type Point3 = Vec3<_Point>;
 pub type Vector3 = Vec3<_Vector>;
 
@@ -32,6 +31,22 @@ gen_getter! {
 }
 gen_getter! {
     Vector3[x,y,z]=>f64
+}
+gen_builder_lite! {
+    Vector3
+    [
+        with_x,
+        with_y,
+        with_z
+    ]
+}
+gen_builder_lite! {
+    Point3
+    [
+        with_x,
+        with_y,
+        with_z
+    ]
 }
 impl Vector3 {
     pub fn dot(&self, other: Vector3) -> Double {
