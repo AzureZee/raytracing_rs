@@ -31,12 +31,15 @@ macro_rules! vec3_op_vec3 {
             impl std::ops::$trait<$rhs> for $lhs {
                 type Output = $output;
                 fn $op(self, rhs: $rhs) -> Self::Output {
-                    let mut i = 0;
-                    let result = self.map(|n| {
-                        let tmp = n.$op(rhs[i]);
-                        i += 1;
-                        tmp
-                    });
+                    let result = {
+                        let [a, b, c] = self.0;
+                        let [d, e, f] = rhs.0;
+                        [
+                            a.$op(d),
+                            b.$op(e),
+                            c.$op(f),
+                        ]
+                    };
                     <$output>::new(result)
                 }
             }
@@ -61,9 +64,14 @@ macro_rules! vec3_op_scalar {
             impl std::ops::$trait<$rhs> for $lhs {
                 type Output = Self;
                 fn $op(self, rhs: $rhs) -> Self::Output {
-                    let result = self.map(|n| {
-                        n.$op(rhs)
-                    });
+                    let result = {
+                        let [a, b, c] = self.0;
+                        [
+                            a.$op(rhs),
+                            b.$op(rhs),
+                            c.$op(rhs),
+                        ]
+                    };
                     Self::new(result)
                 }
             }
@@ -92,12 +100,15 @@ macro_rules! vec3_op_vec3_and_op_assign {
             impl std::ops::$trait<$rhs> for $lhs {
                 type Output = $output;
                 fn $op(self, rhs: $rhs) -> Self::Output {
-                    let mut i = 0;
-                    let result = self.map(|n| {
-                        let tmp = n.$op(rhs[i]);
-                        i += 1;
-                        tmp
-                    });
+                    let result = {
+                        let [a, b, c] = self.0;
+                        let [d, e, f] = rhs.0;
+                        [
+                            a.$op(d),
+                            b.$op(e),
+                            c.$op(f),
+                        ]
+                    };
                     <$output>::new(result)
                 }
             }
@@ -133,9 +144,14 @@ macro_rules! vec3_op_scalar_and_op_assign {
             impl std::ops::$trait<$rhs> for $lhs {
                 type Output = Self;
                 fn $op(self, rhs: $rhs) -> Self::Output {
-                    let result = self.map(|n| {
-                        n.$op(rhs)
-                    });
+                    let result = {
+                        let [a, b, c] = self.0;
+                        [
+                            a.$op(rhs),
+                            b.$op(rhs),
+                            c.$op(rhs),
+                        ]
+                    };
                     Self::new(result)
                 }
             }
