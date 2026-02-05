@@ -43,6 +43,12 @@ impl Vector3 {
         (*self * other).0.iter().sum()
     }
     pub fn cross(&self, vec_b: Vector3) -> Self {
+        // The cross product between two vectors gives you another vector,it perpendicular to both of them
+        // R=V cross W
+        // R=V_yzx * W_zxy - V_zxy * W_yzx
+        // R_x=V_y * W_z − V_z * W_y
+        // R_y=V_z * W_x − V_x * W_z
+        // R_z=V_x * W_y − V_y * W_x
         let [a_x, a_y, a_z] = self.0;
         let [b_x, b_y, b_z] = vec_b.0;
         let c_x = a_y * b_z - a_z * b_y;
@@ -107,32 +113,6 @@ impl<T> Copy for Vec3<T> {}
 impl<T> Clone for Vec3<T> {
     fn clone(&self) -> Self {
         *self
-    }
-}
-
-impl Vector3 {
-    fn _cross(&self, other: Vector3) -> Self {
-        // The cross product between two vectors gives you another vector,it perpendicular to both of them
-        // R=V cross W
-        // R_x=V_y * W_z − V_z * W_y
-        // R_y=V_z * W_x − V_x * W_z
-        // R_z=V_x * W_y − V_y * W_x
-
-        let v_xyz = *self;
-        let w_xyz = other;
-        let mut v_zxy = v_xyz;
-        let mut w_zxy = w_xyz;
-        let mut v_yzx = v_zxy;
-        let mut w_yzx = w_zxy;
-
-        // [(x,y),z]=>[z,(x,y)]
-        v_zxy.0.rotate_left(2);
-        w_zxy.0.rotate_left(2);
-        // [x,(y,z)]=>[(y,z),x]
-        v_yzx.0.rotate_right(2);
-        w_yzx.0.rotate_right(2);
-
-        v_yzx * w_zxy - v_zxy * w_yzx
     }
 }
 
