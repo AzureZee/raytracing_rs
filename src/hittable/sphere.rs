@@ -1,4 +1,4 @@
-use crate::{Double, hittable::Hittable, interval::Interval, ray::Ray, vec3::Point3};
+use crate::{Array3, Double, hittable::Hittable, interval::Interval, ray::Ray, vec3::Point3};
 
 use super::HitRecord;
 
@@ -67,7 +67,7 @@ impl Hittable for Sphere {
 }
 
 impl Sphere {
-    pub fn new(center: [Double; 3], radius: Double) -> Self {
+    pub fn new(center: Array3, radius: Double) -> Self {
         Self {
             center: center.into(),
             radius: radius.max(0.0),

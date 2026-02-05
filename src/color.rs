@@ -1,6 +1,6 @@
 use std::fmt::Write as _;
 
-use crate::Double;
+use crate::{Array3, Double};
 use crate::vec3::Vec3;
 use crate::{gen_getter, vec3_op_scalar_and_op_assign, vec3_op_vec3_and_op_assign};
 
@@ -9,9 +9,9 @@ pub type RGB = Vec3<Color>;
 pub struct Color;
 impl RGB {
     pub fn write_color(&self, buf: &mut String) {
-        fn translate(old: [Double; 3]) -> [u64; 3] {
+        fn translate(old: Array3) -> [u8; 3] {
             let scalar = 255.999;
-            old.map(|n| (scalar * n) as u64)
+            old.map(|n| (scalar * n) as u8)
         }
         let [r, g, b] = translate(self.0);
         let _ = writeln!(buf, "{} {} {}", r, g, b);
