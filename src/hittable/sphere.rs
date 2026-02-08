@@ -67,6 +67,22 @@ impl Hittable for Sphere {
 }
 
 impl Sphere {
+    pub fn from_array(center: Array3) -> Self {
+        Self {
+            center: center.into(),
+            radius: Default::default(),
+        }
+    }
+    pub fn from_point3(center: Point3) -> Self {
+        Self {
+            center,
+            radius: Default::default(),
+        }
+    }
+    pub fn with_radius(mut self,radius: Double) ->Self {
+        self.radius=radius;
+        self
+    }
     pub fn new(center: Array3, radius: Double) -> Self {
         Self {
             center: center.into(),

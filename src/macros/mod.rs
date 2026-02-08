@@ -215,25 +215,4 @@ macro_rules! gen_builder_lite {
         })+
     };
 }
-/// # Example
-/// ```
-/// struct N(u32);
-/// deref_wrapper! {N=>u32}
-/// ```
-macro_rules! _deref_wrapper {
-    (
-        $Wrapper:ty=>$Inner:ty
-    ) => {
-        impl<T> std::ops::Deref for $Wrapper {
-            type Target = $Inner;
-            fn deref(&self) -> &Self::Target {
-                &self.0
-            }
-        }
-        impl<T> std::ops::DerefMut for $Wrapper {
-            fn deref_mut(&mut self) -> &mut Self::Target {
-                &mut self.0
-            }
-        }
-    };
-}
+

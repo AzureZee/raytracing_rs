@@ -1,8 +1,8 @@
 // https://gabrielgambetta.com/computer-graphics-from-scratch/A0-linear-algebra.html
+use crate::Double;
 use crate::{Array3, gen_builder_lite, gen_getter, vec3_op_scalar, vec3_op_vec3};
 
 use std::marker::PhantomData;
-type Double = f64;
 pub type Scalar = f64;
 pub type Point3 = Vec3<_Point>;
 pub type Vector3 = Vec3<_Vector>;
